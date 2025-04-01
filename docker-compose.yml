@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: bunch
+      MYSQL_USER: bunch
+      MYSQL_PASSWORD: 123
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./src/main/resources/static/SQL.sql:/docker-entrypoint-initdb.d/SQL.sql
+    networks:
+      - bunch-network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spring-boot-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mariadb
+    networks:
+      - bunch-network
+
+networks:
+  bunch-network:
+    driver: bridge
