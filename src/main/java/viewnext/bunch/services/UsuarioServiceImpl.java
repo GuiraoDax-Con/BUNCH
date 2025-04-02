@@ -16,23 +16,23 @@ public class UsuarioServiceImpl implements UsuarioService {
     UsuarioDaoImpl dao;
 
 
-    @Override
+   @Override
     public boolean login(Usuario usuario) {
-        if (dao.recuperarUsuarioPorEmail(usuario.getEmail()) == null) {
+       System.out.println("Procesando usuario: " + usuario.getEmail());
+        Usuario usuarioExistente = dao.recuperarUsuarioPorEmail(usuario.getEmail());
+        System.out.println("Usuario encontrado: " + usuarioExistente);
+
+        if (usuarioExistente == null) {
             System.err.println("El usuario no existe");
             return false;
         }
 
-        if (dao.recuperarUsuarioPorEmail(
-                usuario.getEmail())
-                    .getPassword()
-                    .equals(usuario.
-                        getPassword())) {
-
-            System.out.println("El usuario a iniciado sesión");
+        if (usuarioExistente.getPassword().equals(usuario.getPassword())) {
+            System.out.println("El usuario ha iniciado sesión");
             return true;
         }
 
+        System.err.println("Contraseña incorrecta");
         return false;
     }
 
@@ -49,7 +49,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public List<Usuario> recuperarUsuarios() {
         try {
-            Thread.sleep(5000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             /*throw new RuntimeException(e);*/
             e.printStackTrace();
